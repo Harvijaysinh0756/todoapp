@@ -1,0 +1,172 @@
+<html>
+
+<head>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .setcssForDiv {
+            position: absolute;
+            top: 25%;
+            left: 30%;
+            font-size: 18px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            width: 80px;
+            height: 30px;
+            border-color: #74685a;
+            background: linear-gradient (rgba(255, 255, 255));
+        }
+
+        #item {
+            padding: 5px;
+            font-size: 18px;
+        }
+
+        h4 {
+            margin-top: 5px;
+        }
+
+        .Addtask {
+            position: absolute;
+            top: 37%;
+            left: 30%;
+            margin-top: 20px;
+            padding: 20px 0px 20px 0px;
+        }
+
+        .flexfont {
+            display: flex;
+            margin: 10px 0;
+        }
+
+        .checkbox {
+            margin-right: 10px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .compltedtask {
+            position: absolute;
+            top: 37%;
+            left: 50%;
+            margin-top: 20px;
+            padding: 20px 0px 20px 0px;
+        }
+
+        .btndel {
+            border: none;
+            border-radius: 12px;
+            width: 70px;
+            height: 25px;
+            border-color: #74685a;
+            margin-right: 10px;
+            background: linear-gradient (rgba(255, 255, 255));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="setcssForDiv">
+        <h2 style="margin-bottom: 15px ; text-align: left;">Todo app</h2>
+        <input type="text" id="item" placeholder="Todo">
+        <button type="submit" class="btn" onclick="addtodo()">Add</button>
+    </div>
+    <div class="Addtask">
+        <h2>Added Task</h2>
+        <div id="inputItem"></div>
+    </div>
+    <div class="compltedtask">
+        <h2>Completed Task</h2>
+        <div id="chktask"></div>
+    </div>
+    <script>
+        var task = [];
+        //add task
+        function addtodo() {
+            let item = document.getElementById('item').value;
+            var objdata = {
+                itemdata: item,
+            }
+            if (item !== '')
+                task.push(objdata)
+            document.getElementById('item').value = ''
+            console.log("", task)
+            display(task)
+
+        }
+        var content = document.getElementById('inputItem')
+        //for display added task
+        function display(task) {
+            content.innerHTML = ''
+            task.map((keyofitem, index) => {
+                var divbox = document.createElement('div')
+                divbox.setAttribute('class', 'flexfont')
+                var taskview = document.createElement('p')
+                var checkboxfordone = document.createElement('input')
+                checkboxfordone.setAttribute('type', 'checkbox')
+                checkboxfordone.setAttribute('class', 'checkbox')
+                checkboxfordone.addEventListener("click", function () {
+                    checkdone(index)
+                })
+                divbox.append(checkboxfordone, taskview)
+                taskview.textContent = keyofitem.itemdata
+                content.append(divbox)
+            })
+        }
+        //for mark to complted task
+        var taskcomplted = [];
+        function checkdone(index) {
+            taskcomplted.push(task[index])
+            task.splice(index, 1)
+            display(task)
+            console.log("sadf", taskcomplted)
+            displayforcompltetask()
+        }
+
+        //for complted task show
+        var checktask = document.getElementById('chktask')
+        function displayforcompltetask() {
+            checktask.innerHTML = ''
+            taskcomplted.map((displayitem, index) => {
+                var donebox = document.createElement('div')
+                var doneh4 = document.createElement('p')
+                donebox.setAttribute("class", "flexfont")
+                var revertbox = document.createElement('div')
+                revertbox.innerHTML = `
+                    <button class="btndel">Revert</button>`
+                    revertbox.addEventListener("click", function () {
+                    reverttask(index)
+                })
+                var deletebox = document.createElement('div')
+                deletebox.innerHTML = `
+                    <button class="btndel">delete</button>`
+                deletebox.addEventListener("click", function () {
+                    deletetaskdone(index)
+                })
+                doneh4.textContent = displayitem.itemdata
+                donebox.append(deletebox, revertbox,doneh4)
+                checktask.append(donebox)
+            })
+        }
+        function deletetaskdone(index) {
+            taskcomplted.splice(index, 1)
+            displayforcompltetask()
+        }
+        function reverttask(index)
+        {
+            task.push(taskcomplted[index])
+            display(task)
+            taskcomplted.splice(index, 1)
+            displayforcompltetask()
+        }
+    </script>
+</body>
+</html>
